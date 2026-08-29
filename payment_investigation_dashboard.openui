@@ -1,0 +1,63 @@
+root = Stack([header, summaryRow, evidenceRow, detailsTabs], "column", "l")
+header = Card([headerTitle, headerSubtitle, riskPill], "card", "column", "s")
+headerTitle = TextContent("BeforeYouPay — Payment Investigation Dashboard", "large-heavy")
+headerSubtitle = TextContent("Adobe renewal request from a lookalike sender domain. High-risk indicators include a domain typo, payment redirection, urgency pressure, and an arithmetic mismatch.", "default")
+riskPill = TagBlock(["HIGH risk", "Score 94/100", "Manual verification required"])
+
+summaryRow = Stack([riskCard, vendorCard, domainCard, paymentCard], "row", "m", "stretch", "start", true)
+riskCard = Card([riskCardHeader, riskScore, riskNote], "card", "column", "s")
+riskCardHeader = CardHeader("Overall risk", "Composite assessment")
+riskScore = TextContent("94 / 100", "large-heavy")
+riskNote = Callout("error", "High risk", "Do not wire funds until the request is independently verified through a known-good Adobe channel.")
+
+vendorCard = Card([vendorHeader, vendorStatus, vendorFacts], "card", "column", "s")
+vendorHeader = CardHeader("Vendor identity", "Claimed: Adobe Inc.")
+vendorStatus = TagBlock(["Verified: real vendor exists", "Request not verified"])
+vendorFacts = TextContent("Adobe is a legitimate vendor, but the message itself has not been validated against an Adobe-controlled account or portal.", "default")
+
+domainCard = Card([domainHeader, domainStatus, domainFacts], "card", "column", "s")
+domainHeader = CardHeader("Sender-domain verification", "billing@ad0be-renewals.com")
+domainStatus = TagBlock(["Typosquat-like", "Unknown reputation", "Not an official Adobe domain"])
+domainFacts = TextContent("The sender domain swaps a zero for the letter 'o' and adds 'renewals,' a pattern consistent with impersonation and billing scams.", "default")
+
+paymentCard = Card([paymentHeader, paymentStatus, paymentFacts], "card", "column", "s")
+paymentHeader = CardHeader("Payment-instruction risk", "Banking change + wire request")
+paymentStatus = TagBlock(["High pressure", "Bank-change request", "Wire transfer"])
+paymentFacts = TextContent("The request says to ignore prior instructions, use new banking details, and pay immediately — all classic red flags.", "default")
+
+evidenceRow = Stack([arithmeticCard, sourcesCard], "row", "m", "stretch", "start", true)
+arithmeticCard = Card([arithHeader, arithCalc, arithResult], "card", "column", "s")
+arithHeader = CardHeader("Invoice arithmetic", "Recalculated in sandbox")
+arithCalc = TextContent("25 × $89.00 = $2,225.00; plus $750.00 onboarding fee = $2,975.00 subtotal; 8% tax = $238.00.", "default")
+arithResult = Callout("error", "Mismatch found", "Correct total is $3,213.00, while the invoice claims $3,419.00 — a $206.00 discrepancy.")
+
+sourcesCard = Card([sourcesHeader, sourcesList], "card", "column", "s")
+sourcesHeader = CardHeader("Live Bright Data evidence", "Current public-web references")
+sourcesList = MarkDownRenderer("- Adobe Fraud Prevention / Trust Center: https://www.adobe.com/trust/fraud-prevention.html\n- Adobe phishing reporting: https://helpx.adobe.com/security/alertus.html\n- Adobe invoice and billing help: https://helpx.adobe.com/account/individual/billing-and-payments/view-billing-and-invoices/view-download-email-adobe-invoice.html\n- Adobe payment update help: https://helpx.adobe.com/account/individual/billing-and-payments/payment-methods/update-payment-information.html\n- Public search results found no evidence that `ad0be-renewals.com` is an Adobe-owned domain.", "sunk")
+
+detailsTabs = Tabs([factsTab, actionsTab, recordTab])
+factsTab = TabItem("facts", "Verified facts", factsContent)
+factsContent = [
+  Card([factsHeader, factsBody], "card", "column", "s"),
+  Card([warningHeader, warningBody], "card", "column", "s")
+]
+factsHeader = CardHeader("Verified facts", "What is supported by evidence")
+factsBody = MarkDownRenderer("- Adobe is the claimed vendor.\n- Sender domain is a lookalike domain.\n- The request demands a changed wire destination.\n- The invoice math does not reconcile.", "clear")
+warningHeader = CardHeader("Warning signals", "Why this was escalated")
+warningBody = TagBlock(["Domain typo", "Urgent wire", "Bank change", "Arithmetic mismatch", "Do not contact manager"])
+
+actionsTab = TabItem("actions", "Recommended action", actionsContent)
+actionsContent = [
+  Card([actionHeader, actionBody], "card", "column", "s"),
+  Card([approvalHeader, approvalBody], "card", "column", "s")
+]
+actionHeader = CardHeader("Recommended action", "Safe next step")
+actionBody = MarkDownRenderer("1. Pause payment.\n2. Verify the invoice by logging into Adobe directly.\n3. Call a known-good Adobe contact.\n4. Compare the bank details against prior approved records.\n5. Escalate to finance/security if anything differs.", "clear")
+approvalHeader = CardHeader("Approval status", "No external action taken")
+approvalBody = TextContent("This dashboard is for review only. No email, payment, or account action was taken.", "default")
+
+recordTab = TabItem("record", "Incident record", recordContent)
+recordContent = [recordCard]
+recordCard = Card([recordHeader, recordBody], "card", "column", "s")
+recordHeader = CardHeader("High-risk payment incident record", "Structured summary")
+recordBody = CodeBlock("json", "{\n  \"incident_type\": \"payment_request_review\",\n  \"risk_level\": \"HIGH\",\n  \"risk_score\": 94,\n  \"vendor\": \"Adobe Inc.\",\n  \"sender\": \"billing@ad0be-renewals.com\",\n  \"invoice\": \"INV-2026-829\",\n  \"key_findings\": [\n    \"Lookalike sender domain\",\n    \"Changed banking instructions\",\n    \"Urgency pressure\",\n    \"Arithmetic mismatch\"\n  ],\n  \"correct_total\": 3213.00,\n  \"claimed_total\": 3419.00,\n  \"delta\": 206.00,\n  \"status\": \"do_not_pay\"\n}")
