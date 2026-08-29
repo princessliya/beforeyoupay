@@ -1,0 +1,28 @@
+{
+  "incident_type": "payment_request_review",
+  "vendor": "Adobe Inc.",
+  "sender": "Adobe Vendor Payments <billing@ad0be-renewals.com>",
+  "sender_domain": "ad0be-renewals.com",
+  "invoice": "INV-2026-829",
+  "date": "2026-08-29",
+  "risk_level": "HIGH",
+  "risk_score": 94,
+  "arithmetic": {
+    "seat_line": 2225.0,
+    "subtotal": 2975.0,
+    "tax_rate": 0.08,
+    "tax": 238.0,
+    "correct_total": 3213.0,
+    "claimed_total": 3419.0,
+    "delta": 206.0
+  },
+  "red_flags": [
+    "Lookalike sender domain",
+    "Changed banking instructions",
+    "Pressure to wire today",
+    "Instruction to ignore previous payment instructions",
+    "Instruction not to contact usual account manager",
+    "Invoice arithmetic mismatch"
+  ],
+  "recommended_action": "Do not pay until independently verified through a known-good Adobe channel."
+}
