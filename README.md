@@ -77,6 +77,11 @@ flowchart TD
     H --> I{Human approval}
     I -->|Approved| J[Incident record]
     I -->|Denied| K[No action]
+```
+
+## Disclaimer
+
+BeforeYouPay is a hackathon prototype. It supports—but does not replace—professional financial, legal, or cybersecurity review.
 
 
 
